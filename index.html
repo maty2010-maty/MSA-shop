@@ -72,9 +72,11 @@
   </div>
 </div>
 
-<script type="module">
-import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-emailjs.init('PhV4Hp36EPOLiGe6t'); // Public Key
+<!-- CAMBIO: EmailJS cargado globalmente en lugar de módulo -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+// Inicializar EmailJS
+emailjs.init('PhV4Hp36EPOLiGe6t');
 
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
