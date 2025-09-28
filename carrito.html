@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - MSA</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .carrito {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .carrito ul {
+      list-style: none;
+      margin: 20px 0;
+      padding: 0;
+    }
+    .carrito ul li {
+      background: #fff;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn-red {
+      background: red;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.3s;
+      margin: 10px;
+    }
+    .btn-red:hover {
+      background: darkred;
+      transform: scale(1.05);
+    }
+    #form-compra {
+      display: none;
+      margin-top: 20px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #form-compra label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    #form-compra input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    #procesando {
+      display: none;
+      text-align: center;
+      font-size: 20px;
+      color: #0077cc;
+      margin-top: 30px;
+    }
+    #procesando p {
+      margin: 10px 0;
+    }
+  </style>
+
+  <!-- EmailJS -->
+  <script type="module">
+  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+
+  emailjs.init('PhV4Hp36EPOLiGe6t'); // tu Public Key
+</script>
+
+  <script type="text/javascript">
+    (function(){
+      emailjs.init("PhV4Hp36EPOLiGe6t"); // tu Public Key
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo">MSA</div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="carrito-icono">🏠 Volver</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="carrito">
+    <h2>🛒 Carrito de Compras</h2>
+    <ul id="lista-carrito"></ul>
+    <p id="total">Total: $0 MXN</p>
+    <button class="btn-red" id="btn-vaciar">Vaciar Carrito</button>
+    <button class="btn-red" id="btn-proceder">Proceder con la compra</button>
+
+    <!-- Formulario de compra -->
+    <form id="form-compra">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" required>
+
+      <label for="telefono">Teléfono:</label>
+      <input type="tel" id="telefono" required>
+
+      <label for="direccion">Dirección de envío:</label>
+      <input type="text" id="direccion" required>
+
+      <label for="ciudad">Ciudad:</label>
+      <input type="text" id="ciudad" required>
+
+      <label for="codigo">Código postal:</label>
+      <input type="text" id="codigo" required>
+
+      <button type="submit" class="btn-red">Comprar</button>
+    </form>
+
+    <div id="procesando">
+      <p>✅ Su compra está siendo procesada</p>
+      <p>Por favor realiza el pago a la siguiente cuenta:</p>
+      <p>Banco: Banco BBVA</p>
+      <p>Cuenta: 1234567890</p>
+      <p>Correo: msashopmexico@gmail.com</p>
+      <p>Una vez realizado el pago, envía el comprobante con tu nombre y apellido a <strong>ventas@msa.com</strong>. Una vez procesados, iniciaremos el envío de tu pedido. ¡Saludos!</p>
+      <p>Si seleccionaste una camiseta personalizada, envíanos una foto con el diseño.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 MSA - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    // Obtener carrito
+    function obtenerCarrito() {
+      return JSON.parse(localStorage.getItem("carrito")) || [];
+    }
+
+    // Mostrar carrito
+    function mostrarCarrito() {
+      const lista = document.getElementById("lista-carrito");
+      const totalTexto = document.getElementById("total");
+      const carrito = obtenerCarrito();
+      lista.innerHTML = "";
+      let total = 0;
+      carrito.forEach((item, index) => {
+        total += item.precio;
+        const li = document.createElement("li");
+        li.textContent = `${item.nombre} - Talla: ${item.talla}${item.color ? ", Color: " + item.color : ""} - $${item.precio} MXN`;
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.classList.add("btn-red");
+        btnEliminar.style.padding = "5px 10px";
+        btnEliminar.style.fontSize = "14px";
+        btnEliminar.onclick = () => {
+          carrito.splice(index, 1);
+          localStorage.setItem("carrito", JSON.stringify(carrito));
+          mostrarCarrito();
+        };
+        li.appendChild(btnEliminar);
+        lista.appendChild(li);
+      });
+      totalTexto.textContent = `Total: $${total} MXN`;
+    }
+
+    // Vaciar carrito
+    document.getElementById("btn-vaciar").addEventListener("click", () => {
+      localStorage.removeItem("carrito");
+      mostrarCarrito();
+    });
+
+    // Proceder con la compra
+    const btnProceder = document.getElementById("btn-proceder");
+    const formCompra = document.getElementById("form-compra");
+    btnProceder.addEventListener("click", () => {
+      formCompra.style.display = "block";
+      btnProceder.style.display = "none";
+    });
+
+    // Enviar formulario con EmailJS
+    formCompra.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const confirmacion = confirm("¿Estás seguro que deseas realizar la compra?");
+      if (!confirmacion) {
+        alert("Compra cancelada");
+        return;
+      }
+
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const telefono = document.getElementById("telefono").value;
+      const direccion = document.getElementById("direccion").value;
+      const ciudad = document.getElementById("ciudad").value;
+      const codigo = document.getElementById("codigo").value;
+
+      const carrito = obtenerCarrito();
+      let productos = carrito.map(p => `${p.nombre} - Talla: ${p.talla}, Color: ${p.color || 'N/A'} - $${p.precio}`).join("\n");
+      let total = carrito.reduce((acc, p) => acc + p.precio, 0);
+
+      emailjs.send("TU_SERVICE_ID", "TU_TEMPLATE_ID", {
+        nombre: nombre,
+        email: email,
+        telefono: telefono,
+        direccion: direccion,
+        ciudad: ciudad,
+        codigo: codigo,
+        productos: productos,
+        total: total
+      }).then(() => {
+        alert("Pedido enviado correctamente!");
+        formCompra.style.display = "none";
+        document.getElementById("procesando").style.display = "block";
+        localStorage.removeItem("carrito");
+      }).catch((error) => {
+  console.error("Error EmailJS completo:", error);
+  alert("Error al enviar el pedido. Abre la consola (F12) para ver el mensaje completo.");
+});
+
+    });
+
+    document.addEventListener("DOMContentLoaded", mostrarCarrito);
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSA - Tienda de Camisetas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">MSA</div>
+    <nav>
+      <ul>
+        <li><a href="carrito.html" class="carrito-icono">🛒</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="inicio" class="hero">
+    <h1 class="titulo-principal">MSA Shop Mexico</h1>
+    <p>Las mejores camisetas a precios increíbles</p>
+  </section>
+
+  <!-- Productos -->
+  <section id="productos" class="productos">
+    <h2>Nuestras camisetas</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="img/camiseta_nosubogordas.jpg" alt="Camiseta No subo Gordas">
+        <h3>Camiseta No subo Gordas</h3>
+        <p class="precio">$289 MXN</p>
+        <button onclick="abrirModal('Camiseta No subo Gordas', 289)">Agregar</button>
+      </div>
+      <div class="card">
+        <img src="img/camisetaLisaNegra.jpg" alt="Camiseta lisa Negra/Blanca">
+        <h3>Camiseta lisa Negra/Blanca</h3>
+        <p class="precio">$299 MXN</p>
+        <button onclick="abrirModal('Camiseta lisa Negra/Blanca', 299)">Agregar</button>
+      </div>
+      <div class="card">
+        <img src="img/custome.png" alt="Camiseta Estilo">
+        <h3>Camiseta personalizada</h3>
+        <p class="precio">$349 MXN</p>
+        <button onclick="abrirModal('Camiseta Estilo', 349)">Agregar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="cerrarModal()">&times;</span>
+      <h2 id="modal-producto"></h2>
+      <p>Precio: $<span id="modal-precio"></span> MXN</p>
+      <label for="talla">Selecciona talla:</label>
+      <select id="talla">
+        <option>S</option>
+        <option>M</option>
+        <option>L</option>
+        <option>XL</option>
+        <option>XXL</option>
+      </select>
+      <label for="color">Selecciona color:</label>
+      <select id="color"></select>
+      <button onclick="agregarCarritoModal()">Agregar al carrito</button>
+    </div>
+  </div>
+
+  <!-- Contacto -->
+  <section id="contacto" class="contacto">
+    <h2>Contacto</h2>
+    <p>Escríbenos a: <a href="mailto:msashopmexico@gmail.com">msashopmexico@gmail.com</a></p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MSA - Todos los derechos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

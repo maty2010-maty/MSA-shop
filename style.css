@@ -1,0 +1,223 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f8f8;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000;
+  color: #fff;
+  padding: 15px 20px;
+}
+header .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+header ul {
+  list-style: none;
+  display: flex;
+}
+header ul li {
+  margin-left: 20px;
+}
+header ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background: url("img/fondo.jpg") no-repeat center center/cover;
+  color: white;
+}
+.hero h1 {
+  font-size: 40px;
+}
+.hero .btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: red;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+/* Productos */
+.productos {
+  padding: 40px 20px;
+  text-align: center;
+}
+.productos .grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Tarjetas */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.card h3 {
+  margin: 10px 0;
+}
+
+.card p {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.card button {
+  margin-top: auto; /* Empuja el botón al final del card */
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card button:hover {
+  background: darkred;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  text-align: center;
+}
+.modal-content select {
+  width: 80%;
+  padding: 5px;
+  margin: 10px 0;
+}
+.modal-content button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.modal-content button:hover {
+  background: darkred;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  cursor: pointer;
+}
+.close:hover {
+  color: black;
+}
+
+/* Carrito */
+.carrito {
+  padding: 40px 20px;
+  text-align: center;
+}
+.carrito ul {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+.carrito ul li {
+  background: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.carrito button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.carrito button:hover {
+  background: darkred;
+}
+
+/* Contacto */
+.contacto {
+  padding: 40px;
+  text-align: center;
+}
+
+/* Footer */
+footer {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+}
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: url("img/fondo.jpg") no-repeat center center/cover;
+  color: white;
+}
+
+.titulo-principal {
+  font-size: 60px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+/* Footer ya existente */
+footer {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+}

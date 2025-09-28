@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - MSA</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Checkout moderno */
+    .checkout {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .checkout h2 {
+      text-align: center;
+      color: #0077cc;
+      margin-bottom: 30px;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #0077cc;
+      outline: none;
+    }
+    .resumen {
+      width: 100%;
+      background: #f8f8f8;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .resumen h3 {
+      margin-bottom: 10px;
+      color: #0077cc;
+    }
+    .resumen ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .resumen ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .total-compra {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    /* Opciones de pago solo imágenes */
+    .metodos-pago {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .metodo {
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: #f9f9f9;
+    }
+    .metodo.selected {
+      border-color: #0077cc;
+      background: #e0f0ff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .metodo img {
+      max-width: 80px;
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.3s;
+    }
+    .metodo:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Botones rojos */
+    .btn-red {
+      background: red;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .btn-red:hover {
+      background: darkred;
+      transform: scale(1.05);
+    }
+
+    /* Formulario tarjeta */
+    .tarjeta-form {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: #f0f8ff;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    @media(max-width:768px){
+      form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado -->
+  <header>
+    <div class="logo">MSA</div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="carrito-icono">🏠 Volver</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Checkout -->
+  <section class="checkout">
+    <h2>🛒 Checkout - Finaliza tu compra</h2>
+
+    <!-- Resumen del carrito -->
+    <div class="resumen">
+      <h3>Resumen de tu carrito</h3>
+      <ul id="resumen-carrito"></ul>
+      <p class="total-compra" id="total-compra">Total: $0 MXN</p>
+    </div>
+
+    <!-- Formulario de información -->
+    <form id="form-checkout">
+      <div style="flex:1;">
+        <label for="nombre">Nombre completo:</label>
+        <input type="text" id="nombre" required>
+
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" required>
+
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" id="telefono" required>
+
+        <label for="direccion">Dirección de envío:</label>
+        <input type="text" id="direccion" required>
+
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" id="ciudad" required>
+
+        <label for="codigo">Código postal:</label>
+        <input type="text" id="codigo" required>
+      </div>
+
+      <div style="flex:1;">
+        <label>Método de pago:</label>
+        <div class="metodos-pago">
+          <div class="metodo" data-pago="visa">
+            <img src="img/visa.png" alt="Visa">
+          </div>
+          <div class="metodo" data-pago="mastercard">
+            <img src="img/mastercard.png" alt="MasterCard">
+          </div>
+          <div class="metodo" data-pago="oxxo">
+            <img src="img/oxxo.png" alt="Oxxo">
+          </div>
+        </div>
+
+        <!-- Formulario de tarjeta -->
+        <div class="tarjeta-form" id="tarjeta-form">
+          <label for="numero">Número de tarjeta:</label>
+          <input type="text" id="numero" placeholder="1234 5678 9012 3456">
+
+          <label for="fecha">Fecha de expiración:</label>
+          <input type="text" id="fecha" placeholder="MM/AA">
+
+          <label for="cvv">CVV:</label>
+          <input type="text" id="cvv" placeholder="123">
+        </div>
+
+        <button type="submit" class="btn-red">Confirmar Compra</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MSA - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    // Mostrar resumen del carrito
+    function obtenerCarrito() {
+      return JSON.parse(localStorage.getItem("carrito")) || [];
+    }
+
+    function mostrarResumen() {
+      const lista = document.getElementById("resumen-carrito");
+      const totalTexto = document.getElementById("total-compra");
+      let carrito = obtenerCarrito();
+      let total = 0;
+      lista.innerHTML = "";
+      carrito.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item.nombre} - $${item.precio} MXN`;
+        lista.appendChild(li);
+        total += item.precio;
+      });
+      totalTexto.textContent = `Total: $${total} MXN`;
+    }
+
+    // Métodos de pago
+    const metodos = document.querySelectorAll('.metodo');
+    const formTarjeta = document.getElementById('tarjeta-form');
+    let metodoSeleccionado = null;
+
+    metodos.forEach(m => {
+      m.addEventListener('click', () => {
+        metodos.forEach(x => x.classList.remove('selected'));
+        m.classList.add('selected');
+        metodoSeleccionado = m.dataset.pago;
+
+        // Mostrar formulario solo para Visa o MasterCard
+        if(metodoSeleccionado === 'visa' || metodoSeleccionado === 'mastercard'){
+          formTarjeta.style.display = 'block';
+          formTarjeta.querySelectorAll('input').forEach(input => input.required = true);
+        } else {
+          formTarjeta.style.display = 'none';
+          formTarjeta.querySelectorAll('input').forEach(input => input.required = false);
+        }
+      });
+    });
+
+    // Formulario de checkout
+    const form = document.getElementById("form-checkout");
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      if(!metodoSeleccionado){
+        alert("Por favor selecciona un método de pago.");
+        return;
+      }
+      alert(`¡Gracias por tu compra! 🎉\nMétodo de pago: ${metodoSeleccionado}`);
+      localStorage.removeItem("carrito");
+      window.location.href = "index.html";
+    });
+
+    document.addEventListener("DOMContentLoaded", mostrarResumen);
+  </script>
+</body>
+</html>
