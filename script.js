@@ -1,57 +1,83 @@
-<script type="module">
-  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+// script.js
+import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
 
-  // Inicializar EmailJS con tu Public Key
-  emailjs.init('PhV4Hp36EPOLiGe6t');
+// Inicializar EmailJS con tu Public Key
+emailjs.init('PhV4Hp36EPOLiGe6t');
 
-  // Función para obtener el carrito
-  function obtenerCarrito() {
-    return JSON.parse(localStorage.getItem("carrito")) || [];
-  }
+// Función para obtener el carrito
+function obtenerCarrito() {
+  return JSON.parse(localStorage.getItem("carrito")) || [];
+}
 
-  // Mostrar el carrito en la página
-  function mostrarCarrito() {
-    const lista = document.getElementById("lista-carrito");
-    const totalTexto = document.getElementById("total");
-    const carrito = obtenerCarrito();
-    lista.innerHTML = "";
-    let total = 0;
-    carrito.forEach((item, index) => {
-      total += item.precio;
-      const li = document.createElement("li");
-      li.textContent = `${item.nombre} - Talla: ${item.talla}${item.color ? ", Color: " + item.color : ""} - $${item.precio} MXN`;
+// Mostrar el carrito en la página
+function mostrarCarrito() {
+  const lista = document.getElementById("lista-carrito");
+  const totalTexto = document.getElementById("total");
+  const carrito = obtenerCarrito();
+  lista.innerHTML = "";
+  let total = 0;
 
-      const btnEliminar = document.createElement("button");
-      btnEliminar.textContent = "Eliminar";
-      btnEliminar.classList.add("btn-red");
-      btnEliminar.style.padding = "5px 10px";
-      btnEliminar.style.fontSize = "14px";
-      btnEliminar.onclick = () => {
-        carrito.splice(index, 1);
-        localStorage.setItem("carrito", JSON.stringify(carrito));
-        mostrarCarrito();
-      };
-      li.appendChild(btnEliminar);
-      lista.appendChild(li);
+  carrito.forEach((item, index) => {
+    total += item.precio;
+
+    const li = document.createElement("li");
+    li.style.display = "flex";
+    li.style.justifyContent = "space-between";
+    li.style.alignItems = "center";
+    li.style.marginBottom = "5px";
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = `${item.nombre} - Talla: ${item.talla || 'N/A'}${item.color ? ", Color: " + item.color : ""} - $${item.precio} MXN`;
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "Eliminar";
+    btnEliminar.classList.add("btn-red");
+    btnEliminar.style.padding = "5px 10px";
+    btnEliminar.style.fontSize = "14px";
+    btnEliminar.addEventListener("click", () => {
+      const carritoActualizado = obtenerCarrito();
+      carritoActualizado.splice(index, 1);
+      localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
+      mostrarCarrito();
     });
-    totalTexto.textContent = `Total: $${total} MXN`;
-  }
 
-  // Vaciar carrito
-  document.getElementById("btn-vaciar").addEventListener("click", () => {
-    localStorage.removeItem("carrito");
-    mostrarCarrito();
+    li.appendChild(textSpan);
+    li.appendChild(btnEliminar);
+    lista.appendChild(li);
   });
 
-  // Mostrar formulario de compra
+  totalTexto.textContent = `Total: $${total} MXN`;
+  
+  // Mostrar/ocultar botón de proceder según si hay productos
   const btnProceder = document.getElementById("btn-proceder");
-  const formCompra = document.getElementById("form-compra");
+  if (btnProceder) {
+    if (carrito.length === 0) {
+      btnProceder.style.display = "none";
+    } else {
+      btnProceder.style.display = "block";
+    }
+  }
+}
+
+// Vaciar carrito
+document.getElementById("btn-vaciar").addEventListener("click", () => {
+  localStorage.removeItem("carrito");
+  mostrarCarrito();
+});
+
+// Mostrar formulario de compra
+const btnProceder = document.getElementById("btn-proceder");
+const formCompra = document.getElementById("form-compra");
+
+if (btnProceder && formCompra) {
   btnProceder.addEventListener("click", () => {
     formCompra.style.display = "block";
     btnProceder.style.display = "none";
   });
+}
 
-  // Enviar formulario con EmailJS
+// Enviar formulario con EmailJS
+if (formCompra) {
   formCompra.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -68,30 +94,50 @@
     const ciudad = document.getElementById("ciudad").value;
     const codigo = document.getElementById("codigo").value;
 
-    const carrito = obtenerCarrito();
-    const productos = carrito.map(p => `${p.nombre} - Talla: ${p.talla}, Color: ${p.color || 'N/A'} - $${p.precio}`).join("\n");
-    const total = carrito.reduce((acc, p) => acc + p.precio, 0);
+    const carritoActual = obtenerCarrito();
+    if (carritoActual.length === 0) {
+      alert("El carrito está vacío.");
+      return;
+    }
+
+    const productos = carritoActual.map(p => 
+      `${p.nombre} - Talla: ${p.talla || 'N/A'}, Color: ${p.color || 'N/A'} - $${p.precio} MXN`
+    ).join("\n");
+
+    const total = carritoActual.reduce((acc, p) => acc + p.precio, 0);
 
     try {
-      await emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', {
+      // REEMPLAZA 'TU_SERVICE_ID' y 'TU_TEMPLATE_ID' con tus IDs reales de EmailJS
+      await emailjs.send(PhV4Hp36EPOLiGe6t, template_biyacaa, {
         nombre: nombre,
         email: email,
         telefono: telefono,
         direccion: direccion,
         ciudad: ciudad,
-        codigo: codigo,
+        codigo_postal: codigo,
         productos: productos,
-        total: total
+        total: `$${total} MXN`,
+        fecha: new Date().toLocaleDateString()
       });
+      
       alert("✅ Pedido enviado correctamente!");
       formCompra.style.display = "none";
-      document.getElementById("procesando").style.display = "block";
+      
+      // Mostrar mensaje de procesamiento si existe el elemento
+      const procesandoElement = document.getElementById("procesando");
+      if (procesandoElement) {
+        procesandoElement.style.display = "block";
+      }
+      
       localStorage.removeItem("carrito");
+      mostrarCarrito();
+      formCompra.reset();
     } catch (error) {
-      console.error("Error EmailJS completo:", error);
-      alert("❌ Error al enviar el pedido. Revisa la consola (F12) para ver el mensaje completo.");
+      console.error("Error al enviar el pedido:", error);
+      alert("❌ Error al enviar el pedido. Por favor, intenta nuevamente.");
     }
   });
+}
 
-  document.addEventListener("DOMContentLoaded", mostrarCarrito);
-</script>
+// Inicializar carrito al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarCarrito);
